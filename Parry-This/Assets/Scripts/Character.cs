@@ -29,9 +29,13 @@ public class Character : MonoBehaviour
     public float blockFollowthrough;
     public float parryTime;
 
+    private Animator characterAnimator;
+
     private void Start()
     {
         currentState = CharacterStates.Idle;
+        characterAnimator = GetComponentInChildren<Animator>();
+        characterAnimator.SetTrigger("IDLE");
     }
 
     private void Update()
@@ -50,6 +54,7 @@ public class Character : MonoBehaviour
     private void BeginAttack()
     {
         currentState = CharacterStates.Windup;
+        characterAnimator.SetTrigger("ATTACK");
         StartCoroutine(ChangeState(CharacterStates.Attacking, attackWindup, PerformAttack));
     }
 
@@ -57,12 +62,13 @@ public class Character : MonoBehaviour
     {
         OnAttack.Invoke();
         currentState = CharacterStates.Windup;
-        StartCoroutine(ChangeState(CharacterStates.Idle, attackFollowthrough));
+        StartCoroutine(ChangeState(CharacterStates.Idle, attackFollowthrough, ReturnToIdle));
     }
 
     void ReturnToIdle()
     {
         currentState = CharacterStates.Idle;
+        characterAnimator.SetTrigger("IDLE");
     }
 
     private IEnumerator ChangeState(CharacterStates targetState,float targetTime, ChangeStateFunction stateFunction )
