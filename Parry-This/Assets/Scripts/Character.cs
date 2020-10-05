@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -49,15 +50,19 @@ public class Character : MonoBehaviour
     private void BeginAttack()
     {
         currentState = CharacterStates.Windup;
-        StartCoroutine(ChangeState(CharacterStates.Attacking, attackWindup, PerformAttack()));
+        StartCoroutine(ChangeState(CharacterStates.Attacking, attackWindup, PerformAttack));
     }
 
-    ChangeStateFunction PerformAttack()
+    void PerformAttack()
     {
         OnAttack.Invoke();
         currentState = CharacterStates.Windup;
         StartCoroutine(ChangeState(CharacterStates.Idle, attackFollowthrough));
-        return null;
+    }
+
+    void ReturnToIdle()
+    {
+        currentState = CharacterStates.Idle;
     }
 
     private IEnumerator ChangeState(CharacterStates targetState,float targetTime, ChangeStateFunction stateFunction )
