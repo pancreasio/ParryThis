@@ -29,10 +29,14 @@ public class Character : MonoBehaviour
     public float blockFollowthrough;
     public float parryTime;
 
+    private bool returningToIdle;
+    private ChangeStateFunction QueuedAction;
     private Animator characterAnimator;
 
     private void Start()
     {
+        QueuedAction = null;
+        returningToIdle = false;
         currentState = CharacterStates.Idle;
         characterAnimator = GetComponentInChildren<Animator>();
         characterAnimator.SetTrigger("IDLE");
@@ -40,7 +44,7 @@ public class Character : MonoBehaviour
 
     private void Update()
     {
-        
+        Debug.Log(currentState);
     }
 
     public void Attack()
@@ -53,7 +57,30 @@ public class Character : MonoBehaviour
 
     public void Defend()
     {
-        
+        if (currentState == CharacterStates.Idle)
+        {
+            BeginBlock();
+        }
+    }
+
+    public void EndDefend()
+    {
+        if (currentState == CharacterStates.Parry || currentState == CharacterStates.Blocking)
+        {
+            EndBlock();
+        }
+    }
+    private void BeginBlock()
+    {
+        currentState = CharacterStates.Parry;
+        characterAnimator.SetTrigger("BLOCK");
+        StartCoroutine(ChangeState(CharacterStates.Blocking, parryTime));
+    }
+
+    private void EndBlock()
+    {
+        characterAnimator.SetTrigger("IDLE");
+        StartCoroutine(ChangeState(CharacterStates.Idle, blockFollowthrough, ReturnToIdle));
     }
 
     private void BeginAttack()
@@ -65,18 +92,17 @@ public class Character : MonoBehaviour
 
     void PerformAttack()
     {
-        OnAttack.Invoke();
-        currentState = CharacterStates.Windup;
+        if(OnAttack != null)
+            OnAttack.Invoke();
+        characterAnimator.SetTrigger("IDLE");
         StartCoroutine(ChangeState(CharacterStates.Idle, attackFollowthrough, ReturnToIdle));
     }
 
     void ReturnToIdle()
     {
         currentState = CharacterStates.Idle;
-        characterAnimator.SetTrigger("IDLE");
     }
-
-    private IEnumerator ChangeState(CharacterStates targetState,float targetTime, ChangeStateFunction stateFunction )
+    private IEnumerator ChangeState(CharacterStates targetState, float targetTime, ChangeStateFunction stateFunction)
     {
         float time = 0f;
 
@@ -88,7 +114,7 @@ public class Character : MonoBehaviour
 
         currentState = targetState;
 
-        if(stateFunction != null)
+        if (stateFunction != null)
             stateFunction.Invoke();
     }
 

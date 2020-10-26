@@ -42,7 +42,6 @@ public class InputManager : MonoBehaviour
 #if UNITY_EDITOR
         if (Input.GetMouseButtonDown(0))
         {
-            Debug.Log("check");
             if (Camera.main.ScreenToWorldPoint(Input.mousePosition).x < 0)
                 LevelManager.InvokeIfNotNull(OnDefendStart);
             else

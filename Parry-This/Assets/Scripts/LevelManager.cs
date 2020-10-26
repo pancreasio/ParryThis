@@ -16,6 +16,7 @@ public class LevelManager : MonoBehaviour
         playerCharacter.OnAttack += PlayerAttacked;
         InputManager.OnAttackStart += playerCharacter.Attack;
         InputManager.OnDefendStart += playerCharacter.Defend;
+        InputManager.OnDefendEnd += playerCharacter.EndDefend;
     }
 
     // Update is called once per frame
