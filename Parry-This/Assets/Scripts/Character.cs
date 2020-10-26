@@ -51,6 +51,11 @@ public class Character : MonoBehaviour
         }
     }
 
+    public void Defend()
+    {
+        
+    }
+
     private void BeginAttack()
     {
         currentState = CharacterStates.Windup;

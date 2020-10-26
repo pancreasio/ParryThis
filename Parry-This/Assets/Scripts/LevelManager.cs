@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
+    
     public delegate void GameplayEvent();
 
     public Character playerCharacter;
@@ -13,6 +14,8 @@ public class LevelManager : MonoBehaviour
     void Start()
     {
         playerCharacter.OnAttack += PlayerAttacked;
+        InputManager.OnAttackStart += playerCharacter.Attack;
+        InputManager.OnDefendStart += playerCharacter.Defend;
     }
 
     // Update is called once per frame
@@ -24,5 +27,11 @@ public class LevelManager : MonoBehaviour
     void PlayerAttacked()
     {
 
+    }
+
+    public static void InvokeIfNotNull(GameplayEvent eventToInvoke)
+    {
+        if(eventToInvoke !=null)
+        eventToInvoke.Invoke();
     }
 }
