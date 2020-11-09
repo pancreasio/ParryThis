@@ -23,7 +23,7 @@ public class InputManager : MonoBehaviour
             Touch touch = Input.GetTouch(0);
             if (touch.phase == TouchPhase.Began)
             {
-                if (Camera.main.ScreenToWorldPoint(touch.position).x < 0)
+                if (Camera.main.ScreenToViewportPoint(touch.position).x < 0.5f)
                     LevelManager.InvokeIfNotNull(OnDefendStart);
                 else
                     LevelManager.InvokeIfNotNull(OnAttackStart);
@@ -31,7 +31,7 @@ public class InputManager : MonoBehaviour
             else
             if (touch.phase == TouchPhase.Ended)
             {
-                if (Camera.main.ScreenToWorldPoint(touch.position).x < 0)
+                if (Camera.main.ScreenToViewportPoint(touch.position).x < 0.5f)
                     LevelManager.InvokeIfNotNull(OnDefendEnd);
                 else
                     LevelManager.InvokeIfNotNull(OnAttackStart);
@@ -42,14 +42,14 @@ public class InputManager : MonoBehaviour
 #if UNITY_EDITOR
         if (Input.GetMouseButtonDown(0))
         {
-            if (Camera.main.ScreenToWorldPoint(Input.mousePosition).x < 0)
+            if (Camera.main.ScreenToViewportPoint(Input.mousePosition).x < 0.5f)
                 LevelManager.InvokeIfNotNull(OnDefendStart);
             else
                 LevelManager.InvokeIfNotNull(OnAttackStart);
         }
         if (Input.GetMouseButtonUp(0))
         {
-            if (Camera.main.ScreenToWorldPoint(Input.mousePosition).x < 0)
+            if (Camera.main.ScreenToViewportPoint(Input.mousePosition).x < 0.5f)
                 LevelManager.InvokeIfNotNull(OnDefendEnd);
             else
                 LevelManager.InvokeIfNotNull(OnAttackEnd);
