@@ -26,7 +26,7 @@ public class Character : MonoBehaviour
     public int attackDamage;
     protected delegate void ChangeStateFunction();
 
-    private CharacterStates currentState;
+    protected CharacterStates currentState;
 
     public float attackWindup;
     public float attackFollowthrough;
@@ -43,7 +43,7 @@ public class Character : MonoBehaviour
     private ChangeStateFunction QueuedAction;
     protected Animator characterAnimator;
 
-    protected void Start()
+    protected virtual void Start()
     {
         QueuedAction = null;
         returningToIdle = false;
@@ -66,19 +66,21 @@ public class Character : MonoBehaviour
 
     public void RecieveDamage(int incomingDamage)
     {
-        if (currentState != CharacterStates.Blocking && currentState != CharacterStates.Parry && currentState != CharacterStates.Damaged && !armored)
+        if (!armored && (currentState == CharacterStates.Attacking || currentState == CharacterStates.Windup || currentState == CharacterStates.Idle))
         {
-            if(currentState != CharacterStates.Idle)
+            if (currentState != CharacterStates.Idle)
                 interrupted = true;
             hitpoints -= incomingDamage;
             if (hitpoints <= 0)
             {
                 currentState = CharacterStates.Damaged;
+                interrupted = false;
                 StartCoroutine(Die());
             }
             else
             {
                 characterAnimator.SetTrigger("DAMAGED");
+                interrupted = false;
                 Damaged();
             }
         }
@@ -98,8 +100,7 @@ public class Character : MonoBehaviour
 
     protected void Damaged()
     {
-        characterAnimator.SetTrigger("IDLE");
-        ChangeState(CharacterStates.Idle, damagedTime, ReturnToIdle);
+        //characterAnimator.SetTrigger("IDLE");
     }
 
     public void Attack()
@@ -125,37 +126,47 @@ public class Character : MonoBehaviour
             EndBlock();
         }
     }
-    protected void BeginBlock()
+    public void BeginBlock()
     {
         currentState = CharacterStates.Parry;
+        characterAnimator.ResetTrigger("IDLE");
         characterAnimator.SetTrigger("BLOCK");
-        StartCoroutine(ChangeState(CharacterStates.Blocking, parryTime));
     }
 
-    protected void EndBlock()
+    public void EndBlock()
     {
         characterAnimator.SetTrigger("IDLE");
-        StartCoroutine(ChangeState(CharacterStates.Idle, blockFollowthrough, ReturnToIdle));
+    }
+
+    public void ResetBlock()
+    {
+        currentState = CharacterStates.Idle;
+        characterAnimator.ResetTrigger("BLOCK");
+    }
+
+    public void EndParry()
+    {
+        currentState = CharacterStates.Blocking;
     }
 
     protected void BeginAttack()
     {
-        currentState = CharacterStates.Windup;
+        currentState = CharacterStates.Attacking;
+        characterAnimator.ResetTrigger("IDLE");
         characterAnimator.SetTrigger("ATTACK");
-        StartCoroutine(ChangeState(CharacterStates.Attacking, attackWindup, PerformAttack));
     }
 
-    protected void PerformAttack()
+    public void PerformAttack()
     {
         if (OnAttack != null)
             OnAttack.Invoke(attackDamage);
-        characterAnimator.SetTrigger("IDLE");
-        StartCoroutine(ChangeState(CharacterStates.Idle, attackFollowthrough, ReturnToIdle));
     }
 
-    protected void ReturnToIdle()
+    public void ReturnToIdle()
     {
+        characterAnimator.SetTrigger("IDLE");
         armored = false;
+        interrupted = false;
         currentState = CharacterStates.Idle;
     }
     protected private IEnumerator ChangeState(CharacterStates targetState, float targetTime, ChangeStateFunction stateFunction)
@@ -167,18 +178,15 @@ public class Character : MonoBehaviour
             time += Time.deltaTime;
             if (interrupted)
             {
-                break;
+                yield break;
             }
             yield return null;
         }
 
-        if (!interrupted)
-        {
-            currentState = targetState;
+        currentState = targetState;
 
-            if (stateFunction != null)
-                stateFunction.Invoke();
-        }
+        if (stateFunction != null)
+            stateFunction.Invoke();
     }
 
     protected private IEnumerator ChangeState(CharacterStates targetState, float targetTime)
@@ -190,12 +198,10 @@ public class Character : MonoBehaviour
             time += Time.deltaTime;
             if (interrupted)
             {
-                break;
+                yield break;
             }
             yield return null;
         }
-
-        if(!interrupted)
-            currentState = targetState;
+        currentState = targetState;
     }
 }

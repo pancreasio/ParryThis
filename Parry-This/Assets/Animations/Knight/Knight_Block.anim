@@ -133,9 +133,9 @@ AnimationClip:
   - curve:
     - time: 0
       value: {fileID: 21300136, guid: 9162fe84f30a3ae4d83ef98c09dc7980, type: 3}
-    - time: 0.06666667
+    - time: 0.016666668
       value: {fileID: 21300138, guid: 9162fe84f30a3ae4d83ef98c09dc7980, type: 3}
-    - time: 0.13333334
+    - time: 0.05
       value: {fileID: 21300140, guid: 9162fe84f30a3ae4d83ef98c09dc7980, type: 3}
     - time: 0.2
       value: {fileID: 21300142, guid: 9162fe84f30a3ae4d83ef98c09dc7980, type: 3}
@@ -326,4 +326,18 @@ AnimationClip:
   m_EulerEditorCurves: []
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
-  m_Events: []
+  m_Events:
+  - time: 0.016666668
+    functionName: BeginBlock
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.2
+    functionName: EndParry
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0

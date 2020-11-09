@@ -323,6 +323,7 @@ GameObject:
   - component: {fileID: 457307423}
   - component: {fileID: 457307422}
   - component: {fileID: 457307424}
+  - component: {fileID: 457307425}
   m_Layer: 0
   m_Name: Enemy Sprite
   m_TagString: Untagged
@@ -411,6 +412,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &457307425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 457307421}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd694cc9bf7d7524db31fb268b849b61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  character: {fileID: 1717327843}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -603,10 +617,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHitpoints: 100
   attackDamage: 100
-  attackWindup: 0.2
-  attackFollowthrough: 0.4
+  attackWindup: 0.25
+  attackFollowthrough: 0.24
   blockWindup: 0.1
-  blockFollowthrough: 0.3
+  blockFollowthrough: 0.2
   parryTime: 0.25
   deathTime: 1
   damagedTime: 1
@@ -834,14 +848,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHitpoints: 300
-  attackDamage: 0
-  attackWindup: 0
+  attackDamage: 100
+  attackWindup: 0.35
   attackFollowthrough: 0
   blockWindup: 0
   blockFollowthrough: 0
   parryTime: 0
   deathTime: 1
-  damagedTime: 1
+  damagedTime: 0.6
+  minimumAttackInterval: 0.8
+  maximumAttackInterval: 1.5
 --- !u!1 &1750727171
 GameObject:
   m_ObjectHideFlags: 0
@@ -932,6 +948,7 @@ GameObject:
   - component: {fileID: 1854424440}
   - component: {fileID: 1854424439}
   - component: {fileID: 1854424441}
+  - component: {fileID: 1854424442}
   m_Layer: 0
   m_Name: Player Sprite
   m_TagString: Untagged
@@ -1020,3 +1037,16 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1854424442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1854424438}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd694cc9bf7d7524db31fb268b849b61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  character: {fileID: 1000954043}

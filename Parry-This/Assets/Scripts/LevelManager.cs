@@ -66,6 +66,7 @@ public class LevelManager : MonoBehaviour
     {
         playerCharacter.OnDestinationReached -= BeginNextEncounter;
         nextEncounter.OnCombatEnded += ProcessEncounter;
+        nextEncounter.enemyCharacter.OnAttack += EnemyAttacked;
         nextEncounter.BeginCombat();
     }
     private void GoToEncounter()

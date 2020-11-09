@@ -6,7 +6,7 @@ public class PlayerController : Character
 {
     public float moveSpeed;
     public LevelManager.GameplayEvent OnDestinationReached;
-    protected void Start()
+    protected override void Start()
     {
         base.Start();
     }
