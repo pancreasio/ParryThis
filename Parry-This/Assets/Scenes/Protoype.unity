@@ -503,11 +503,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61b3ec0cf0b0ca245a95eea816a6c0ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHitpoints: 0
   attackWindup: 0.2
   attackFollowthrough: 0.4
   blockWindup: 0.1
   blockFollowthrough: 0.3
   parryTime: 0.25
+  deathTime: 1
 --- !u!4 &1000954044
 Transform:
   m_ObjectHideFlags: 0
@@ -680,7 +682,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerCharacter: {fileID: 1000954043}
-  enemyCharacter: {fileID: 0}
+  encounterList: []
+  currentLevelData:
+    currentLevelIndex: 0
+    nextLevelIndex: 1
 --- !u!1 &1750727171
 GameObject:
   m_ObjectHideFlags: 0

@@ -19,6 +19,9 @@ public class Character : MonoBehaviour
     }
 
     public LevelManager.GameplayEvent OnAttack;
+    public LevelManager.GameplayEvent OnDeath;
+    private int hitpoints;
+    public int maxHitpoints;
     private delegate void ChangeStateFunction();
 
     private CharacterStates currentState;
@@ -29,7 +32,10 @@ public class Character : MonoBehaviour
     public float blockFollowthrough;
     public float parryTime;
 
+    public float deathTime = 1f;
+
     private bool returningToIdle;
+    private bool armored;
     private ChangeStateFunction QueuedAction;
     private Animator characterAnimator;
 
@@ -37,6 +43,8 @@ public class Character : MonoBehaviour
     {
         QueuedAction = null;
         returningToIdle = false;
+        armored = false;
+        hitpoints = maxHitpoints;
         currentState = CharacterStates.Idle;
         characterAnimator = GetComponentInChildren<Animator>();
         characterAnimator.SetTrigger("IDLE");
@@ -44,12 +52,41 @@ public class Character : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(currentState);
+
+    }
+
+    public virtual void BeginCombat()
+    {
+
+    }
+
+    public void RecieveDamage(int incomingDamage)
+    {
+        if(currentState != CharacterStates.Blocking && currentState != CharacterStates.Parry && !armored)
+        {
+            hitpoints -= incomingDamage;
+            if(hitpoints<= 0)
+            {
+                StartCoroutine(Die());
+            }
+        }
+    }
+
+    private IEnumerator Die()
+    {
+        characterAnimator.SetTrigger("DIE");
+        float timer = 0f;
+        while(timer<deathTime)
+        {
+            timer+= Time.deltaTime;
+            yield return null;
+        }
+        LevelManager.InvokeIfNotNull(OnDeath);
     }
 
     public void Attack()
     {
-        if (currentState == CharacterStates.Idle)
+        if (currentState == CharacterStates.Idle && hitpoints > 0)
         {
             BeginAttack();
         }
@@ -57,7 +94,7 @@ public class Character : MonoBehaviour
 
     public void Defend()
     {
-        if (currentState == CharacterStates.Idle)
+        if (currentState == CharacterStates.Idle && hitpoints > 0)
         {
             BeginBlock();
         }
@@ -100,6 +137,7 @@ public class Character : MonoBehaviour
 
     void ReturnToIdle()
     {
+        armored = false;
         currentState = CharacterStates.Idle;
     }
     private IEnumerator ChangeState(CharacterStates targetState, float targetTime, ChangeStateFunction stateFunction)

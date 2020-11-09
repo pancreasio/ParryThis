@@ -7,13 +7,35 @@ public class LevelManager : MonoBehaviour
     
     public delegate void GameplayEvent();
 
+    public static LevelManager LevelInstance;
     public Character playerCharacter;
-    public Character enemyCharacter;
+    public List<Combat> encounterList;
 
-    // Start is called before the first frame update
+    [System.Serializable]
+    public struct LevelData
+    {
+        public int currentLevelIndex;
+        public int nextLevelIndex;
+        public GameplayEvent OnLevelCompleted;
+        public GameplayEvent OnLevelFailed;
+    }
+
+    public LevelData currentLevelData;
+
+    private void Awake()
+    {
+        LevelInstance = this;    
+    }
+
+    private void OnDestroy() 
+    {
+        LevelInstance = null;    
+    }
+
     void Start()
     {
         playerCharacter.OnAttack += PlayerAttacked;
+        playerCharacter.OnDeath += LevelFailed;
         InputManager.OnAttackStart += playerCharacter.Attack;
         InputManager.OnDefendStart += playerCharacter.Defend;
         InputManager.OnDefendEnd += playerCharacter.EndDefend;
@@ -34,5 +56,15 @@ public class LevelManager : MonoBehaviour
     {
         if(eventToInvoke !=null)
         eventToInvoke.Invoke();
+    }
+
+    private void LevelFailed()
+    {
+        InvokeIfNotNull(currentLevelData.OnLevelFailed);
+    }
+
+    private void LevelCompleted()
+    {
+        InvokeIfNotNull(currentLevelData.OnLevelCompleted);
     }
 }
