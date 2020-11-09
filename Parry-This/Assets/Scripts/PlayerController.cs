@@ -13,7 +13,7 @@ public class PlayerController : Character
 
     public void ProceedToNextCombat(float targetPosition)
     {
-        characterAnimator.SetTrigger("WALK");
+        BeginWalk();
         StartCoroutine(WalkToTarget(targetPosition));
     }
 
@@ -41,6 +41,7 @@ public class PlayerController : Character
         }
 
         transform.position = new Vector3(targetPosition, transform.position.y, 0f);
+        ReturnToIdle();
         DestinationReached();
     }
 

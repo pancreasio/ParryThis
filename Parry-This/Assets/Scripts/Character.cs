@@ -16,6 +16,7 @@ public class Character : MonoBehaviour
         Attacking,
         Damaged,
         Invulnerable,
+        Walking,
     }
 
     public LevelManager.GameplayDamageEvent OnAttack;
@@ -138,6 +139,13 @@ public class Character : MonoBehaviour
         characterAnimator.SetTrigger("BLOCK");
     }
 
+    public void BeginWalk()
+    {
+        currentState = CharacterStates.Walking;
+        characterAnimator.ResetTrigger("IDLE");
+        characterAnimator.SetTrigger("WALK");
+    }
+
     public void EndBlock()
     {
         characterAnimator.SetTrigger("IDLE");
@@ -173,40 +181,5 @@ public class Character : MonoBehaviour
         armored = false;
         interrupted = false;
         currentState = CharacterStates.Idle;
-    }
-    protected private IEnumerator ChangeState(CharacterStates targetState, float targetTime, ChangeStateFunction stateFunction)
-    {
-        float time = 0f;
-
-        while (time <= targetTime)
-        {
-            time += Time.deltaTime;
-            if (interrupted)
-            {
-                yield break;
-            }
-            yield return null;
-        }
-
-        currentState = targetState;
-
-        if (stateFunction != null)
-            stateFunction.Invoke();
-    }
-
-    protected private IEnumerator ChangeState(CharacterStates targetState, float targetTime)
-    {
-        float time = 0f;
-
-        while (time <= targetTime)
-        {
-            time += Time.deltaTime;
-            if (interrupted)
-            {
-                yield break;
-            }
-            yield return null;
-        }
-        currentState = targetState;
     }
 }
