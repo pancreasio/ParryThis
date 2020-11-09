@@ -8,8 +8,9 @@ public class LevelManager : MonoBehaviour
     public delegate void GameplayEvent();
 
     public static LevelManager LevelInstance;
-    public Character playerCharacter;
+    public PlayerController playerCharacter;
     public List<Combat> encounterList;
+    private Combat nextEncounter = null;
 
     [System.Serializable]
     public struct LevelData
@@ -39,6 +40,37 @@ public class LevelManager : MonoBehaviour
         InputManager.OnAttackStart += playerCharacter.Attack;
         InputManager.OnDefendStart += playerCharacter.Defend;
         InputManager.OnDefendEnd += playerCharacter.EndDefend;
+        ProcessEncounter();
+    }
+
+    private void ProcessEncounter()
+    {
+        FindNextEncounter();
+        GoToEncounter();
+    }
+
+    private void FindNextEncounter()
+    {
+        foreach(Combat combat in encounterList)
+        {
+            if(!combat.completed)
+            {
+                nextEncounter = combat;
+                break;
+            }
+        }
+    }
+
+    private void BeginNextEncounter()
+    {
+        playerCharacter.OnDestinationReached -= BeginNextEncounter;
+        nextEncounter.OnCombatEnded += ProcessEncounter;
+        nextEncounter.BeginCombat();
+    }
+    private void GoToEncounter()
+    {
+        playerCharacter.ProceedToNextCombat(nextEncounter.playerExpectedPosition.transform.position.x);
+        playerCharacter.OnDestinationReached += BeginNextEncounter;
     }
 
     // Update is called once per frame

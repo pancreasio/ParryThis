@@ -22,7 +22,7 @@ public class Character : MonoBehaviour
     public LevelManager.GameplayEvent OnDeath;
     private int hitpoints;
     public int maxHitpoints;
-    private delegate void ChangeStateFunction();
+    protected delegate void ChangeStateFunction();
 
     private CharacterStates currentState;
 
@@ -37,9 +37,9 @@ public class Character : MonoBehaviour
     private bool returningToIdle;
     private bool armored;
     private ChangeStateFunction QueuedAction;
-    private Animator characterAnimator;
+    protected Animator characterAnimator;
 
-    private void Start()
+    protected void Start()
     {
         QueuedAction = null;
         returningToIdle = false;
@@ -47,7 +47,6 @@ public class Character : MonoBehaviour
         hitpoints = maxHitpoints;
         currentState = CharacterStates.Idle;
         characterAnimator = GetComponentInChildren<Animator>();
-        characterAnimator.SetTrigger("IDLE");
     }
 
     private void Update()
@@ -72,7 +71,7 @@ public class Character : MonoBehaviour
         }
     }
 
-    private IEnumerator Die()
+    protected IEnumerator Die()
     {
         characterAnimator.SetTrigger("DIE");
         float timer = 0f;
@@ -107,27 +106,27 @@ public class Character : MonoBehaviour
             EndBlock();
         }
     }
-    private void BeginBlock()
+    protected void BeginBlock()
     {
         currentState = CharacterStates.Parry;
         characterAnimator.SetTrigger("BLOCK");
         StartCoroutine(ChangeState(CharacterStates.Blocking, parryTime));
     }
 
-    private void EndBlock()
+    protected void EndBlock()
     {
         characterAnimator.SetTrigger("IDLE");
         StartCoroutine(ChangeState(CharacterStates.Idle, blockFollowthrough, ReturnToIdle));
     }
 
-    private void BeginAttack()
+    protected void BeginAttack()
     {
         currentState = CharacterStates.Windup;
         characterAnimator.SetTrigger("ATTACK");
         StartCoroutine(ChangeState(CharacterStates.Attacking, attackWindup, PerformAttack));
     }
 
-    void PerformAttack()
+    protected void PerformAttack()
     {
         if(OnAttack != null)
             OnAttack.Invoke();
@@ -135,12 +134,12 @@ public class Character : MonoBehaviour
         StartCoroutine(ChangeState(CharacterStates.Idle, attackFollowthrough, ReturnToIdle));
     }
 
-    void ReturnToIdle()
+    protected void ReturnToIdle()
     {
         armored = false;
         currentState = CharacterStates.Idle;
     }
-    private IEnumerator ChangeState(CharacterStates targetState, float targetTime, ChangeStateFunction stateFunction)
+    protected private IEnumerator ChangeState(CharacterStates targetState, float targetTime, ChangeStateFunction stateFunction)
     {
         float time = 0f;
 
@@ -156,7 +155,7 @@ public class Character : MonoBehaviour
             stateFunction.Invoke();
     }
 
-    private IEnumerator ChangeState(CharacterStates targetState, float targetTime)
+    protected private IEnumerator ChangeState(CharacterStates targetState, float targetTime)
     {
         float time = 0f;
 

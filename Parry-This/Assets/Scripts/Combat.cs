@@ -5,9 +5,9 @@ using UnityEngine;
 public class Combat : MonoBehaviour
 {
     // Start is called before the first frame update
-    Character enemyCharacter;
-    GameObject playerExpectedPosition;
-    private bool completed;
+    public Character enemyCharacter;
+    public GameObject playerExpectedPosition;
+    public bool completed;
 
     public LevelManager.GameplayEvent OnCombatEnded;
     void Start()
