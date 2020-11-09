@@ -18,10 +18,12 @@ public class Character : MonoBehaviour
         Invulnerable,
     }
 
-    public LevelManager.GameplayEvent OnAttack;
+    public LevelManager.GameplayDamageEvent OnAttack;
     public LevelManager.GameplayEvent OnDeath;
     private int hitpoints;
     public int maxHitpoints;
+
+    public int attackDamage;
     protected delegate void ChangeStateFunction();
 
     private CharacterStates currentState;
@@ -33,9 +35,11 @@ public class Character : MonoBehaviour
     public float parryTime;
 
     public float deathTime = 1f;
+    public float damagedTime = 1f;
 
     private bool returningToIdle;
     private bool armored;
+    private bool interrupted;
     private ChangeStateFunction QueuedAction;
     protected Animator characterAnimator;
 
@@ -44,6 +48,7 @@ public class Character : MonoBehaviour
         QueuedAction = null;
         returningToIdle = false;
         armored = false;
+        interrupted = false;
         hitpoints = maxHitpoints;
         currentState = CharacterStates.Idle;
         characterAnimator = GetComponentInChildren<Animator>();
@@ -61,12 +66,20 @@ public class Character : MonoBehaviour
 
     public void RecieveDamage(int incomingDamage)
     {
-        if(currentState != CharacterStates.Blocking && currentState != CharacterStates.Parry && !armored)
+        if (currentState != CharacterStates.Blocking && currentState != CharacterStates.Parry && currentState != CharacterStates.Damaged && !armored)
         {
+            if(currentState != CharacterStates.Idle)
+                interrupted = true;
             hitpoints -= incomingDamage;
-            if(hitpoints<= 0)
+            if (hitpoints <= 0)
             {
+                currentState = CharacterStates.Damaged;
                 StartCoroutine(Die());
+            }
+            else
+            {
+                characterAnimator.SetTrigger("DAMAGED");
+                Damaged();
             }
         }
     }
@@ -75,12 +88,18 @@ public class Character : MonoBehaviour
     {
         characterAnimator.SetTrigger("DIE");
         float timer = 0f;
-        while(timer<deathTime)
+        while (timer < deathTime)
         {
-            timer+= Time.deltaTime;
+            timer += Time.deltaTime;
             yield return null;
         }
         LevelManager.InvokeIfNotNull(OnDeath);
+    }
+
+    protected void Damaged()
+    {
+        characterAnimator.SetTrigger("IDLE");
+        ChangeState(CharacterStates.Idle, damagedTime, ReturnToIdle);
     }
 
     public void Attack()
@@ -128,8 +147,8 @@ public class Character : MonoBehaviour
 
     protected void PerformAttack()
     {
-        if(OnAttack != null)
-            OnAttack.Invoke();
+        if (OnAttack != null)
+            OnAttack.Invoke(attackDamage);
         characterAnimator.SetTrigger("IDLE");
         StartCoroutine(ChangeState(CharacterStates.Idle, attackFollowthrough, ReturnToIdle));
     }
@@ -146,13 +165,20 @@ public class Character : MonoBehaviour
         while (time <= targetTime)
         {
             time += Time.deltaTime;
+            if (interrupted)
+            {
+                break;
+            }
             yield return null;
         }
 
-        currentState = targetState;
+        if (!interrupted)
+        {
+            currentState = targetState;
 
-        if (stateFunction != null)
-            stateFunction.Invoke();
+            if (stateFunction != null)
+                stateFunction.Invoke();
+        }
     }
 
     protected private IEnumerator ChangeState(CharacterStates targetState, float targetTime)
@@ -162,9 +188,14 @@ public class Character : MonoBehaviour
         while (time <= targetTime)
         {
             time += Time.deltaTime;
+            if (interrupted)
+            {
+                break;
+            }
             yield return null;
         }
 
-        currentState = targetState;
+        if(!interrupted)
+            currentState = targetState;
     }
 }

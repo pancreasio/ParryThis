@@ -6,6 +6,7 @@ public class LevelManager : MonoBehaviour
 {
     
     public delegate void GameplayEvent();
+    public delegate void GameplayDamageEvent(int damage);
 
     public static LevelManager LevelInstance;
     public PlayerController playerCharacter;
@@ -79,9 +80,14 @@ public class LevelManager : MonoBehaviour
 
     }
 
-    void PlayerAttacked()
+    void PlayerAttacked(int damage)
     {
+        nextEncounter.enemyCharacter.RecieveDamage(damage);
+    }
 
+    void EnemyAttacked(int damage)
+    {
+        playerCharacter.RecieveDamage(damage);
     }
 
     public static void InvokeIfNotNull(GameplayEvent eventToInvoke)

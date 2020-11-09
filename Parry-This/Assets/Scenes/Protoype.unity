@@ -263,7 +263,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f9a6ce5fa002094b82c17c48861dfae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyCharacter: {fileID: 0}
+  enemyCharacter: {fileID: 1717327843}
   playerExpectedPosition: {fileID: 399754834}
   completed: 0
 --- !u!4 &331940659
@@ -322,6 +322,7 @@ GameObject:
   m_Component:
   - component: {fileID: 457307423}
   - component: {fileID: 457307422}
+  - component: {fileID: 457307424}
   m_Layer: 0
   m_Name: Enemy Sprite
   m_TagString: Untagged
@@ -391,6 +392,25 @@ Transform:
   m_Father: {fileID: 1717327842}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &457307424
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 457307421}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: b4590f527a9181a4580e71dca5b40e1d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -582,12 +602,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHitpoints: 100
+  attackDamage: 100
   attackWindup: 0.2
   attackFollowthrough: 0.4
   blockWindup: 0.1
   blockFollowthrough: 0.3
   parryTime: 0.25
   deathTime: 1
+  damagedTime: 1
   moveSpeed: 3
 --- !u!4 &1000954044
 Transform:
@@ -776,6 +798,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1717327842}
+  - component: {fileID: 1717327843}
   m_Layer: 0
   m_Name: Minotaur
   m_TagString: Untagged
@@ -798,6 +821,27 @@ Transform:
   m_Father: {fileID: 331940659}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1717327843
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1717327841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e28f1855cc6f2294a982d3bc62446b1b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHitpoints: 300
+  attackDamage: 0
+  attackWindup: 0
+  attackFollowthrough: 0
+  blockWindup: 0
+  blockFollowthrough: 0
+  parryTime: 0
+  deathTime: 1
+  damagedTime: 1
 --- !u!1 &1750727171
 GameObject:
   m_ObjectHideFlags: 0
