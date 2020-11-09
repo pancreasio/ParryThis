@@ -23,7 +23,7 @@ public class InputManager : MonoBehaviour
             Touch touch = Input.GetTouch(0);
             if (touch.phase == TouchPhase.Began)
             {
-                if (Camera.main.ScreenToViewportPoint(touch.position).x < 0.5f)
+                if (Camera.main.ScreenToViewportPoint(touch.position).x < 0.5f && Camera.main.ScreenToViewportPoint(touch.position).y < 0.7f )
                     LevelManager.InvokeIfNotNull(OnDefendStart);
                 else
                     LevelManager.InvokeIfNotNull(OnAttackStart);

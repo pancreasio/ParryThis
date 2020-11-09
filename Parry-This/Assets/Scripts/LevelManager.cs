@@ -24,6 +24,9 @@ public class LevelManager : MonoBehaviour
 
     public LevelData currentLevelData;
 
+    public GameObject pauseUI;
+    public GameObject gameUI;
+
     private void Awake()
     {
         LevelInstance = this;    
@@ -41,6 +44,7 @@ public class LevelManager : MonoBehaviour
         InputManager.OnAttackStart += playerCharacter.Attack;
         InputManager.OnDefendStart += playerCharacter.Defend;
         InputManager.OnDefendEnd += playerCharacter.EndDefend;
+        pauseUI.SetActive(false);
         ProcessEncounter();
     }
 
@@ -99,11 +103,26 @@ public class LevelManager : MonoBehaviour
 
     private void LevelFailed()
     {
+        nextEncounter.LostCombat();
         InvokeIfNotNull(currentLevelData.OnLevelFailed);
     }
 
     private void LevelCompleted()
     {
         InvokeIfNotNull(currentLevelData.OnLevelCompleted);
+    }
+
+    public void PauseGame()
+    {
+        Time.timeScale = 0f;
+        pauseUI.SetActive(true);
+        gameUI.SetActive(false);
+    }
+
+    public void UnPauseGame()
+    {
+        Time.timeScale = 1f;
+        pauseUI.SetActive(false);
+        gameUI.SetActive(true);
     }
 }

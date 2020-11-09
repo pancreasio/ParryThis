@@ -21,6 +21,11 @@ public class EnemyController : Character
         canAttack = true;
     }
 
+    public override void EndCombat()
+    {
+        canAttack = false;
+    }
+
     // Update is called once per frame
     void Update()
     {

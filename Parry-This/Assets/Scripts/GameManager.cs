@@ -5,8 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public GameManager gameInstance;
+    public static GameManager gameInstance;
     private int currentSceneIndex;
+    public delegate void GameFlowEvent();
     void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
@@ -19,6 +20,16 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+    }
+
+    public void GoToMenu()
+    {
+        SceneManager.LoadScene(0);
+    }
+
+    public void StartGame()
+    {
+        SceneManager.LoadScene(1);
     }
 
     void Update()

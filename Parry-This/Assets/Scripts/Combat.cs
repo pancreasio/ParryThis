@@ -10,6 +10,7 @@ public class Combat : MonoBehaviour
     public bool completed;
 
     public LevelManager.GameplayEvent OnCombatEnded;
+    public LevelManager.GameplayEvent OnCombatLost;
     void Start()
     {
         completed = false;
@@ -33,5 +34,11 @@ public class Combat : MonoBehaviour
         completed = true;
         enemyCharacter.gameObject.SetActive(false);
         LevelManager.InvokeIfNotNull(OnCombatEnded);
+    }
+
+    public void LostCombat()
+    {
+        enemyCharacter.EndCombat();
+        LevelManager.InvokeIfNotNull(OnCombatLost);
     }
 }

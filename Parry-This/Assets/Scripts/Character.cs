@@ -64,7 +64,12 @@ public class Character : MonoBehaviour
 
     }
 
-    public void RecieveDamage(int incomingDamage)
+    public virtual void EndCombat()
+    {
+
+    }
+
+    public virtual void RecieveDamage(int incomingDamage)
     {
         if (!armored && (currentState == CharacterStates.Attacking || currentState == CharacterStates.Windup || currentState == CharacterStates.Idle))
         {

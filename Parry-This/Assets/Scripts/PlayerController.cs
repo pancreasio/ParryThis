@@ -24,9 +24,17 @@ public class PlayerController : Character
         LevelManager.InvokeIfNotNull(OnDestinationReached);
     }
 
+    public override void RecieveDamage(int damage)
+    {
+        base.RecieveDamage(damage);
+#if UNITY_ANDROID
+        Handheld.Vibrate();
+#endif
+    }
+
     private IEnumerator WalkToTarget(float targetPosition)
     {
-        while(transform.position.x< targetPosition)
+        while (transform.position.x < targetPosition)
         {
             transform.position += transform.right * moveSpeed * Time.deltaTime;
             yield return null;
@@ -39,6 +47,6 @@ public class PlayerController : Character
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }
