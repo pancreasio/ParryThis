@@ -27,7 +27,7 @@ public class PlayerController : Character
     public override void RecieveDamage(int damage)
     {
         base.RecieveDamage(damage);
-#if UNITY_ANDROID
+#if UNITY_ANDROID && !UNITY_EDITOR
         Handheld.Vibrate();
 #endif
     }

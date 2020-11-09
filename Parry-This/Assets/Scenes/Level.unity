@@ -2300,8 +2300,8 @@ MonoBehaviour:
   - {fileID: 631405641}
   - {fileID: 701300233}
   currentLevelData:
-    currentLevelIndex: 0
-    nextLevelIndex: 1
+    currentLevelIndex: 1
+    nextLevelIndex: 2
   pauseUI: {fileID: 1100345173}
   gameUI: {fileID: 83936757}
 --- !u!1 &1306634591
