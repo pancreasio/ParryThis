@@ -37,7 +37,12 @@ public class LevelManager : MonoBehaviour
 
     private void OnDestroy() 
     {
-        LevelInstance = null;    
+        LevelInstance = null;
+        playerCharacter.OnAttack -= PlayerAttacked;
+        playerCharacter.OnDeath -= LevelFailed;
+        InputManager.OnAttackStart -= playerCharacter.Attack;
+        InputManager.OnDefendStart -= playerCharacter.Defend;
+        InputManager.OnDefendEnd -= playerCharacter.EndDefend;    
     }
 
     void Start()

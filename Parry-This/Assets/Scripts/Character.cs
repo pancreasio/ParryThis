@@ -146,6 +146,8 @@ public class Character : MonoBehaviour
     {
         currentState = CharacterStates.Walking;
         characterAnimator.ResetTrigger("IDLE");
+        characterAnimator.ResetTrigger("BLOCK");
+        characterAnimator.ResetTrigger("ATTACK");
         characterAnimator.SetTrigger("WALK");
     }
 
