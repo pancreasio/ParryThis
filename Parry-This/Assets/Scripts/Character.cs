@@ -74,6 +74,9 @@ public class Character : MonoBehaviour
     {
         if (!armored && (currentState == CharacterStates.Attacking || currentState == CharacterStates.Windup || currentState == CharacterStates.Idle))
         {
+#if UNITY_ANDROID && !UNITY_EDITOR
+        Handheld.Vibrate();
+#endif
             if (currentState != CharacterStates.Idle)
                 interrupted = true;
             hitpoints -= incomingDamage;

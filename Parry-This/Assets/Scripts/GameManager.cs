@@ -7,7 +7,9 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager gameInstance;
     private int currentSceneIndex;
+    public int mainMenuIndex;
     public delegate void GameFlowEvent();
+    public delegate void ChangeSceneAction(int index);
     void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
@@ -20,6 +22,14 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        LevelManager.OnSceneChangeRequest += ChangeScene;
+        MenuManager.OnStartButtonPressed += StartGame;
+        MenuManager.OnMenuButtonPressed += GoToMenu;
+    }
+
+    void ChangeScene(int sceneIndex)
+    {
+        SceneManager.LoadScene(sceneIndex);
     }
 
     public void GoToMenu()

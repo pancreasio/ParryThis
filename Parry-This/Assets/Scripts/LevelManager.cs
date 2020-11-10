@@ -8,6 +8,7 @@ public class LevelManager : MonoBehaviour
     public delegate void GameplayEvent();
     public delegate void GameplayDamageEvent(int damage);
 
+    public static GameManager.ChangeSceneAction OnSceneChangeRequest;
     public static LevelManager LevelInstance;
     public PlayerController playerCharacter;
     public List<Combat> encounterList;
@@ -26,6 +27,8 @@ public class LevelManager : MonoBehaviour
 
     public GameObject pauseUI;
     public GameObject gameUI;
+    public GameObject winUI;
+    public GameObject looseUI;
 
     private void Awake()
     {
@@ -56,14 +59,18 @@ public class LevelManager : MonoBehaviour
 
     private void FindNextEncounter()
     {
+        bool levelCompleted = true;
         foreach(Combat combat in encounterList)
-        {
+        {            
             if(!combat.completed)
             {
                 nextEncounter = combat;
+                levelCompleted = false;
                 break;
             }
         }
+        if(levelCompleted)
+            LevelCompleted();
     }
 
     private void BeginNextEncounter()
@@ -77,12 +84,6 @@ public class LevelManager : MonoBehaviour
     {
         playerCharacter.ProceedToNextCombat(nextEncounter.playerExpectedPosition.transform.position.x);
         playerCharacter.OnDestinationReached += BeginNextEncounter;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     void PlayerAttacked(int damage)
@@ -104,11 +105,15 @@ public class LevelManager : MonoBehaviour
     private void LevelFailed()
     {
         nextEncounter.LostCombat();
+        gameUI.SetActive(false);
+        looseUI.SetActive(true);
         InvokeIfNotNull(currentLevelData.OnLevelFailed);
     }
 
     private void LevelCompleted()
     {
+        gameUI.SetActive(false);
+        winUI.SetActive(true);
         InvokeIfNotNull(currentLevelData.OnLevelCompleted);
     }
 
@@ -124,5 +129,26 @@ public class LevelManager : MonoBehaviour
         Time.timeScale = 1f;
         pauseUI.SetActive(false);
         gameUI.SetActive(true);
+    }
+
+    public void RestartLevel()
+    {
+        Time.timeScale = 1f;
+        if(OnSceneChangeRequest != null)
+            OnSceneChangeRequest.Invoke(currentLevelData.currentLevelIndex);
+    }
+
+    public void NextLevel()
+    {
+        Time.timeScale = 1f;
+        if(OnSceneChangeRequest != null)
+            OnSceneChangeRequest.Invoke(currentLevelData.nextLevelIndex);
+    }
+
+    public void ExitLevel()
+    {
+        Time.timeScale = 1f;
+        if(OnSceneChangeRequest != null)
+            OnSceneChangeRequest.Invoke(GameManager.gameInstance.mainMenuIndex);
     }
 }
